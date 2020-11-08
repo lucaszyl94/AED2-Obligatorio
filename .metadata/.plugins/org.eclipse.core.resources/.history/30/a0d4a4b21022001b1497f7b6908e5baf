@@ -1,4 +1,4 @@
-/*package uy.edu.ort.obli;
+package uy.edu.ort.obli;
 
 import static org.junit.Assert.*;
 
@@ -116,4 +116,3 @@ public class TestsObligatorio {
 	}
 
 }
-*/
