@@ -8,7 +8,8 @@ public class Sistema implements ISistema {
     private static Sistema instancia;
     private Grafo Mapa;
     private ABB<Usuario> Usuarios;
-    
+//   private Grafo gMoviles;
+//   private Grafo gDeliverys;
     public Sistema() {
 
     }
@@ -23,7 +24,9 @@ public class Sistema implements ISistema {
 
     @Override
     public Retorno inicializarSistema(int maxPuntos) {
-        this.Mapa = new Grafo(maxPuntos);
+        this.Mapa = new Grafo(maxPuntos);//el mapa es un grafo dirigido? seria por tener orientacion de snetido de calles?
+//        this.gDeliverys = new Grafo(maxPuntos,false);
+//        this.gMoviles = new Grafo(maxPuntos,true);
         this.Usuarios = new ABB<Usuario>();
         return new Retorno(Resultado.OK);
     }
@@ -41,7 +44,7 @@ public class Sistema implements ISistema {
         if (!u.verificarMail()) {
             return new Retorno(Resultado.ERROR_1);
         }
-        if (!Usuarios.pertenece(u)) {
+        if (Usuarios.pertenece(u)) {
             return new Retorno(Resultado.ERROR_2);
         }
         Usuarios.insertar(u);
@@ -65,14 +68,28 @@ public class Sistema implements ISistema {
     @Override
     public Retorno listarUsuarios() {
         Retorno ret = new Retorno(Retorno.Resultado.OK);
-        Usuarios.listarAscendiente();
+        for(Usuario u:Usuarios.listarAsc()){
+             ret.valorString+= "\n"+u.getMail()+";"+u.getNombre()+"\n";  
+        }
+
         
         return ret;
     }
 
     @Override
     public Retorno direccionesDeUsuario(String email) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Retorno ret= new Retorno(Resultado.ERROR_1);
+          Usuario u = new Usuario(email);    
+        if(!u.verificarMail()) return ret;
+          Nodo<Usuario> us = Usuarios.buscar(u);
+        if(us==null)return new Retorno   (Resultado.ERROR_2);  
+   ret=new Retorno(Resultado.OK);
+       u=us.getDato();
+       for(Punto p:u.getDirecciones()){
+           ret.valorString+=p.toString();
+       
+            }
+      return ret;
     }
 
     @Override
@@ -91,10 +108,10 @@ public class Sistema implements ISistema {
         Punto destino = new Punto(coordXf,coordYf);
         if(metros<=0) return ret;
         if(tiempo<=0) return new Retorno(Resultado.ERROR_2);
-        if(Mapa.existeVertice(origen) && Mapa.existeVertice(destino)) return new Retorno(Resultado.ERROR_3);
-        if(Mapa.existeArista(origen, destino)) return new Retorno(Resultado.ERROR_4);
-        Mapa.agregarArista(origen, destino, metros, tiempo); 
-        return new Retorno(Resultado.OK); 
+        if(!Mapa.existeVertice(origen) || !Mapa.existeVertice(destino)) return new Retorno(Resultado.ERROR_3);
+        if(Mapa.existeArista(origen, destino,true)||Mapa.existeArista(origen, destino,false)) return new Retorno(Resultado.ERROR_4);
+       if( Mapa.agregarArista(origen, destino, metros, tiempo)) return new Retorno(Resultado.OK); 
+return ret;
     }
 
     @Override
@@ -104,8 +121,8 @@ public class Sistema implements ISistema {
     	Punto ubicacion = new Punto(coordX,coordY);
     	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
     	Delivery d = new Delivery(cedula,coordX,coordY);
-    	Mapa.agregarDelivery(ubicacion, d);
-    	ret = new Retorno(Retorno.Resultado.OK);
+    	if(Mapa.agregarDelivery(ubicacion, d))return new Retorno(Retorno.Resultado.OK);
+    	//ret = new Retorno(Retorno.Resultado.OK);
         return ret;
     }
 
@@ -116,8 +133,8 @@ public class Sistema implements ISistema {
     	Punto ubicacion = new Punto(coordX,coordY);
     	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
     	Movil m = new Movil(matricula,coordX,coordY);
-    	Mapa.agregarMovil(ubicacion, m);
-    	ret = new Retorno(Retorno.Resultado.OK);
+    	if(Mapa.agregarMovil(ubicacion, m))return new Retorno(Retorno.Resultado.OK);
+    	//ret = new Retorno(Retorno.Resultado.OK);
         return ret;
     }
     

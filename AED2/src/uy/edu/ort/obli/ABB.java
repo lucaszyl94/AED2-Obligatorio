@@ -1,5 +1,9 @@
 package uy.edu.ort.obli;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class ABB<T extends Comparable<T>> {
 	
 	private Nodo<T> raiz;
@@ -118,5 +122,28 @@ public class ABB<T extends Comparable<T>> {
 			borrarMinRec(nodo.getIzq());
 		}
 	}
-	
+	 public ArrayList<T> listarAsc() {
+        ArrayList<T> lista = new ArrayList<T>();
+        lista = listarAscendienteRec(raiz, lista);
+        Collections.sort(lista, new Comparator<T>() {
+            
+            @Override
+            public int compare(T u1, T u2) {
+                return u1.compareTo(u2);
+            }
+        });
+        return lista;
+        
+    }
+    
+    private ArrayList<T> listarAscendienteRec(Nodo<T> nodo, ArrayList<T> lista) {
+        
+        if (nodo != null) {
+            listarAscendienteRec(nodo.getIzq(), lista);
+            lista.add(nodo.getDato());
+            //System.out.println("Nombre: "+nodo.getDato().getNombre()+" Mail: "+nodo.getDato().getMail());
+            listarAscendienteRec(nodo.getDer(), lista);
+        }
+        return lista;
+    }
 }

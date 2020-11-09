@@ -12,7 +12,7 @@ public class Usuario implements Comparable<Usuario>{
     private String nombre;
     private String mail;
     private String password;
-
+private Punto [] direcciones;
 
     public Usuario(String mail, String nombre, String password) {
        
@@ -30,6 +30,14 @@ public class Usuario implements Comparable<Usuario>{
     }
       public void setId(int id) {
         this.id = id;
+    }
+
+    public Punto[] getDirecciones() {
+        return direcciones;
+    }
+
+    public void setDirecciones(Punto[] direcciones) {
+        this.direcciones = direcciones;
     }
 
     public Usuario() {
@@ -99,5 +107,54 @@ public class Usuario implements Comparable<Usuario>{
 		
 		// return this.nombreCompleto.compareTo(o.nombreCompleto);
 	}
-	
+      
+	public boolean agregarDireccion(double coordX, double coordY){
+            Punto p =existeDireccion(new Punto(coordX,coordY));
+            if(p!=null){
+                p.setDato(p.getDato()+1);
+              int pos = buscarPos(p);
+        direcciones[pos] = p;
+        return true;
+            }else{
+                 Punto pp = new Punto( coordX,  coordY, 1);
+              int pos = posHueco(direcciones);
+        direcciones[pos] = pp; 
+        return true;
+            }
+     
+        }
+  
+
+    private int posHueco(Object[] o) {
+        int pos = 0;
+        while (o[pos] != null) {
+            pos++;
+        }
+        return pos;
+    }
+
+    private int posConVertice() {
+        int pos = 0;
+        while (direcciones[pos] == null) {
+            pos++;
+        }
+        return pos;
+    }
+
+    public Punto existeDireccion(Punto p) {
+        for(Punto pp:direcciones){
+            if(p.coordX==pp.coordX&&p.coordY==pp.coordY){
+                return pp;
+            }
+        }
+        return null;
+    }
+       private int buscarPos(Punto destino) {
+        for (int i = 0; i < direcciones.length; i++) {
+            if (destino.equals(direcciones[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }
