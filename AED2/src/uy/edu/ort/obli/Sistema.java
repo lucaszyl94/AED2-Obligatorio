@@ -1,17 +1,15 @@
 package uy.edu.ort.obli;
 
+import uy.edu.ort.obli.ABB;
 import uy.edu.ort.obli.Retorno.Resultado;
 
 public class Sistema implements ISistema {
 
-    //private NodoUsuario  nodo;
-    private ControladorUsuarios cu;
     private static Sistema instancia;
-    private int maxPuntos;
-    private ControladorMovilesDeliverys cmd;
-private Grafo grafo;
+    private Grafo Mapa;
+    private ABB<Usuario> Usuarios;
+    
     public Sistema() {
-        // this.cu=new ControladorUsuarios();
 
     }
 
@@ -25,26 +23,15 @@ private Grafo grafo;
 
     @Override
     public Retorno inicializarSistema(int maxPuntos) {
-       
-        if (maxPuntos > 0) {
-             getInstancia();
-             
-        this.cmd = new ControladorMovilesDeliverys();
-        this.cu = new ControladorUsuarios();
-        this.grafo=new Grafo(maxPuntos);
-            return new Retorno(Resultado.OK);
-        } else {
-            return new Retorno(Resultado.ERROR_1);
-        }
-
+        this.Mapa = new Grafo(maxPuntos);
+        this.Usuarios = new ABB<Usuario>();
+        return new Retorno(Resultado.OK);
     }
 
     @Override
     public Retorno destruirSistema() {
-        this.cu = null;
-        this.cmd = null;
-        this.maxPuntos = 0;
-        this.grafo=null;
+        this.Mapa = null;
+        this.Usuarios = null;
         return new Retorno(Resultado.OK);
     }
 
@@ -54,39 +41,32 @@ private Grafo grafo;
         if (!u.verificarMail()) {
             return new Retorno(Resultado.ERROR_1);
         }
-        if (cu.buscarUsuario(email) != null) {
+        if (!Usuarios.pertenece(u)) {
             return new Retorno(Resultado.ERROR_2);
         }
-        if (cu.registrarUsuario(password, nombre, email)) {
-            return new Retorno(Resultado.OK);
-
-        }
-        return new Retorno(Resultado.ERROR_1);
+        Usuarios.insertar(u);
+        return new Retorno(Resultado.OK);
     }
 
     @Override
     public Retorno buscarUsuario(String email) {
-        Retorno ret = new Retorno(Retorno.Resultado.ERROR_1);
-       boolean u = new Usuario(email,null,null).verificarMail();
-        if(!u) return new Retorno(Resultado.ERROR_1);
-        Usuario us= cu.buscarUsuario(email);
-        if(us==null)return new Retorno(Resultado.ERROR_2);
-         ret = new Retorno(Retorno.Resultado.OK);
-        ret.valorString = (us.getMail()+";"+us.getNombre());
-       // if (ret.valorString != null) {
-           
-       // }
-
+       Retorno ret = new Retorno(Retorno.Resultado.ERROR_1);
+       Usuario u = new Usuario(email);
+       
+        if(u.verificarMail()) {
+        	Nodo<Usuario> us = Usuarios.buscar(u);
+        	ret.valorEntero = us.getCant();
+        	ret.valorString = us.getDato().getMail() + ";" + us.getDato().getNombre();
+        	ret.resultado =  Resultado.OK;
+        }
         return ret;
     }
 
     @Override
     public Retorno listarUsuarios() {
         Retorno ret = new Retorno(Retorno.Resultado.OK);
-        for (Usuario u : cu.listarAscendiente()) {
-            ret.valorString += "\n" + u.getMail() + ";" + u.getNombre() + "\n";
-        }
-
+        Usuarios.listarAscendiente();
+        
         return ret;
     }
 
@@ -98,53 +78,49 @@ private Grafo grafo;
     @Override
     public Retorno registrarEsquina(double coordX, double coordY) {
     	Retorno ret = new Retorno(Retorno.Resultado.ERROR_1);
-    	return ret;
-    //	if(instancia)
+    	if(Mapa.esLleno()) return ret;
+    	if(Mapa.existeVertice(new Punto(coordX,coordY))) return new Retorno(Retorno.Resultado.ERROR_2);
+    	Mapa.agregarVertice(new Punto(coordX, coordY),null);
+    	return new Retorno(Retorno.Resultado.OK);
     }
 
     @Override
     public Retorno registrarTramo(double coordXi, double coordYi, double coordXf, double coordYf, int metros, int tiempo) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Retorno ret = new Retorno(Resultado.ERROR_1);
+        Punto origen = new Punto(coordXi,coordYi);
+        Punto destino = new Punto(coordXf,coordYf);
+        if(metros<=0) return ret;
+        if(tiempo<=0) return new Retorno(Resultado.ERROR_2);
+        if(Mapa.existeVertice(origen) && Mapa.existeVertice(destino)) return new Retorno(Resultado.ERROR_3);
+        if(Mapa.existeArista(origen, destino)) return new Retorno(Resultado.ERROR_4);
+        Mapa.agregarArista(origen, destino, metros, tiempo); 
+        return new Retorno(Resultado.OK); 
     }
 
     @Override
     public Retorno registrarDelivery(String cedula, Double coordX, Double coordY) {
-        Retorno ret = new Retorno(Retorno.Resultado.ERROR_1);
-//
-//        if (cmd.registrarDelivery(cedula, coordX, coordY)) {
-//            ret = new Retorno(Retorno.Resultado.OK);
-//            ret.valorString = "true";
-//            return ret;
-//
-//        } else {
-//            ret.valorString = "false";
-//            return ret;
-//        }
- if (grafo.agregarMovilODelivery(new Delivery(cedula, coordX, coordY))) {
-            ret = new Retorno(Retorno.Resultado.OK);
-            ret.valorString = "true";
-            return ret;
-
-        } else {
-            ret.valorString = "false";
-            return ret;
-        }
+    	Retorno ret = new Retorno(Resultado.ERROR_1);
+    	if(Mapa.esLleno()) return ret;
+    	Punto ubicacion = new Punto(coordX,coordY);
+    	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
+    	Delivery d = new Delivery(cedula,coordX,coordY);
+    	Mapa.agregarDelivery(ubicacion, d);
+    	ret = new Retorno(Retorno.Resultado.OK);
+        return ret;
     }
 
     @Override
     public Retorno registrarMovil(String matricula, Double coordX, Double coordY) {
-        Retorno ret = new Retorno(Retorno.Resultado.ERROR_1);
-
-        if (cmd.registrarMovil(matricula, coordX, coordY)) {
-            ret.valorString = "true";
-            return ret = new Retorno(Retorno.Resultado.OK);
-
-        } else {
-            ret.valorString = "false";
-            return ret;
-        }
+    	Retorno ret = new Retorno(Resultado.ERROR_1);
+    	if(Mapa.esLleno()) return ret;
+    	Punto ubicacion = new Punto(coordX,coordY);
+    	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
+    	Movil m = new Movil(matricula,coordX,coordY);
+    	Mapa.agregarMovil(ubicacion, m);
+    	ret = new Retorno(Retorno.Resultado.OK);
+        return ret;
     }
-
+    
     @Override
     public Retorno movilMasCercano(Double coordXi, Double coordYi) {
         return new Retorno(Resultado.NO_IMPLEMENTADA);

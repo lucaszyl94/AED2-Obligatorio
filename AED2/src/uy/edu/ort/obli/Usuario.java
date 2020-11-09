@@ -5,7 +5,7 @@
  */
 package uy.edu.ort.obli;
 
-public class Usuario {//<T extends Comparable<T>> uso clase usuario para insertar en dato?
+public class Usuario implements Comparable<Usuario>{
        private int id;
 
   
@@ -19,6 +19,10 @@ public class Usuario {//<T extends Comparable<T>> uso clase usuario para inserta
         this.nombre = nombre;
         this.mail = mail;
         this.password = password;
+    }
+    public Usuario(String mail) {
+       
+        this.mail = mail;
     }
 
     public int getId() {
@@ -74,4 +78,26 @@ public class Usuario {//<T extends Comparable<T>> uso clase usuario para inserta
     public boolean validar(){
         return this.verificarMail()&&this.verificarNombre()&&  this.verificarPassword();
     }
+    
+    @Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Usuario other = (Usuario) obj;
+		if (mail != other.mail)
+			return false;
+		return true;
+	}
+
+	@Override
+	public int compareTo(Usuario o) {
+		return this.mail.compareTo(o.mail);
+		
+		// return this.nombreCompleto.compareTo(o.nombreCompleto);
+	}
+	
 }

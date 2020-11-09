@@ -9,16 +9,17 @@ public class Grafo {
 	private int tope;
 	private int cant;
 	private Punto[] vertices;
-        private Delivery[] delivery;
+	private Movil[] moviles;
+    private Delivery[] delivery;
 	private Arista[][] matAdyD;
 	private Arista[][] matAdyND;
-private Movil[] moviles;
+
 	public Grafo(int tope){//, boolean esDirigido) {
 		this.tope = tope;
 		this.vertices = new Punto[tope];
 		this.matAdyD = new Arista[tope][tope];
 		this.matAdyND = new Arista[tope][tope];
-this.delivery=new Delivery[tope];
+		this.delivery=new Delivery[tope];
 		for (int i = 0; i < matAdyD.length; i++) {
 			for (int j = 0; j < matAdyD.length; j++) {
 				matAdyD[i][j] = new Arista();
@@ -44,7 +45,7 @@ this.delivery=new Delivery[tope];
 
 	// Pre: !esLleno()
 	public void agregarVertice(Punto<Object> dato,Object o) {
-            dato.setDato(o);
+            //dato.setDato(o);
 		int pos = posHueco(vertices);
 		vertices[pos] = dato;
 		cant++;
@@ -100,14 +101,16 @@ this.delivery=new Delivery[tope];
 
 	// Pre: existeVertice(origen) && existeVertice(destino) && !existeArista(origen,
 	// destino)
-	public void agregarArista(Punto origen, Punto destino, int costo) {
+	public void agregarArista(Punto origen, Punto destino, int metros, int minutos) {
 		int posOrigen = buscarPos(origen);
 		int posDestino = buscarPos(destino);
 
 		matAdyD[posOrigen][posDestino].setExiste(true);
-		matAdyD[posOrigen][posDestino].setCosto(costo);
+		matAdyD[posOrigen][posDestino].setmetros(metros);
+		matAdyD[posOrigen][posDestino].setminutos(minutos);
 		matAdyND[posOrigen][posDestino].setExiste(true);
-		matAdyND[posOrigen][posDestino].setCosto(costo);
+		matAdyND[posOrigen][posDestino].setmetros(metros);
+		matAdyND[posOrigen][posDestino].setminutos(minutos);
 	}
 
 	private int buscarPos(Punto destino) {
@@ -189,7 +192,7 @@ this.delivery=new Delivery[tope];
 			// costo + ")");
 		}
 	}
-
+	
 	public void dijkstra(Punto origen) {
 
 		int posO = buscarPos(origen);
@@ -240,46 +243,52 @@ this.delivery=new Delivery[tope];
 		System.out.println(Arrays.toString(vertices));
 		System.out.println(Arrays.toString(ant));
 	}
+	
 	public void agregarDelivery(Punto dato,Object o) {
-            dato.setDato(o);
-            Delivery d= (Delivery) o;
-            if(o.getClass()== Delivery.class && !existeVertice(new Punto(d.coordX,d.coordY))){
-                
-            }
-            int posH = posHueco(delivery);
+        //dato.setDato(o);
+        Delivery d= (Delivery) o;
+        if(o.getClass()== Delivery.class && !existeVertice(new Punto(d.coordX,d.coordY))){
+            
+        }
+        int posH = posHueco(delivery);
 		delivery[posH] = (Delivery)o;
 		int pos = posHueco(vertices);
 		vertices[pos] = dato;
 		cant++;
 	}
-        public void agregarMovil(Punto dato,Object o) {
-            dato.setDato(o);
-            Movil d= (Movil) o;
-            if(o.getClass()== Movil.class && !existeVertice(new Punto(d.coordX,d.coordY))){
-                
-            }
-            int posH = posHueco(moviles);
+	
+	
+    public void agregarMovil(Punto dato,Object o) {
+        //dato.setDato(o);
+        Movil d= (Movil) o;
+        if(o.getClass()== Movil.class && !existeVertice(new Punto(d.coordX,d.coordY))){
+            
+        }
+        
+        int posH = posHueco(moviles);
 		moviles[posH] = (Movil)o;
 		int pos = posHueco(vertices);
 		vertices[pos] = dato;
 		cant++;
 	}
-        public boolean agregarMovilODelivery(Object o){
-            if(o.getClass()== Movil.class ){
-                Movil m=(Movil) o;
-                Punto p=new Punto(m.coordX,m.coordY);
-                if(!existeVertice(p)){
-                    agregarMovil(p,m);
-                    return true;
-                }
-            }else   if(o.getClass()== Delivery.class ){
-                Delivery m=(Delivery) o;
-                Punto p=new Punto(m.coordX,m.coordY);
-                if(!existeVertice(p)){
-                    agregarDelivery(p,m);
-                    return true;
-                }
-        }
-            return false;
-        }
+    
+    public boolean agregarMovilODelivery(Object o){
+        if(o.getClass()== Movil.class ){
+            Movil m=(Movil) o;
+            Punto p=new Punto(m.coordX,m.coordY);
+            if(!existeVertice(p)){
+                agregarMovil(p,m);
+                return true;
+            }
+            
+        }else   if(o.getClass()== Delivery.class ){
+            Delivery m=(Delivery) o;
+            Punto p=new Punto(m.coordX,m.coordY);
+            if(!existeVertice(p)){
+                agregarDelivery(p,m);
+                return true;
+            }
+    }
+        return false;
+    }
 }

@@ -16,7 +16,7 @@ public class Main {
     Sistema s = Sistema.getInstancia();
       Prueba p = new Prueba();
     s.inicializarSistema(10);
-  s.registrarUsuario("123456","da1","da1@.com"); 
+  s.registrarUsuario("123456","da1","da1@.com");
   s.registrarUsuario("123456","da3","da3@.com");
   s.registrarUsuario("123456","da4","da4@.com");
   s.registrarUsuario("123456","da2","da2@.com");

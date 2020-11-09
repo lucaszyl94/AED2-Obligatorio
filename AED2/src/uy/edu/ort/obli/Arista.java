@@ -2,16 +2,18 @@ package uy.edu.ort.obli;
 
 public class Arista {
 	private boolean existe;
-	private int costo;
+	private int minutos;
+	private int metros;
 
-	public Arista(int costo) {
+	public Arista(int minutos, int metros) {
 		this.existe = true;
-		this.costo = costo;
+		this.minutos = minutos;
+		this.metros = metros;
 	}
 
 	public Arista() {
 //		this.existe = false;
-//		this.costo = 0;
+//		this.minutos = 0;
 	}
 
 	public boolean isExiste() {
@@ -22,17 +24,25 @@ public class Arista {
 		this.existe = existe;
 	}
 
-	public int getCosto() {
-		return costo;
+	public int getminutos() {
+		return minutos;
 	}
 
-	public void setCosto(int costo) {
-		this.costo = costo;
+	public void setminutos(int minutos) {
+		this.minutos = minutos;
 	}
 
+	public int getmetros() {
+		return metros;
+	}
+
+	public void setmetros(int metros) {
+		this.metros = metros;
+	}
+	
 	@Override
 	public String toString() {
-		return costo+"";
+		return minutos+""+metros;
 	}
 
 }

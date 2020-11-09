@@ -12,6 +12,26 @@ public class ABB<T extends Comparable<T>> {
 		this.raiz = raiz;
 	}
 	
+	public Nodo<T> buscar(T dato) {
+		int cant = 0;
+		return buscarRec(dato, cant, raiz);
+	}
+
+	private Nodo<T> buscarRec(T dato, int cant, Nodo<T> nodo) {
+		if (nodo == null) {
+			return null;
+		} else if (dato.equals(nodo.getDato())){
+			nodo.setCant(cant);
+			return nodo;
+		} else if(dato.compareTo(nodo.getDato()) < 0) {
+			cant++;
+			return buscarRec(dato, cant, nodo.getIzq());
+		} else {
+			cant++;
+			return buscarRec(dato, cant, nodo.getDer());
+		}
+	}
+	
 	public boolean pertenece(T dato) {
 		return perteneceRec(dato, raiz);
 	}

@@ -2,14 +2,6 @@ package uy.edu.ort.obli;
 public class Punto<T> {
 	protected double coordX;
 	protected double coordY;
-  private T dato;
-    public T getDato() {
-        return dato;
-    }
-
-    public void setDato(T dato) {
-        this.dato = dato;
-    }
       
 
 	public Punto(double coordX, double coordY) {

@@ -4,11 +4,20 @@ package uy.edu.ort.obli;
 
 public class Nodo<T> {
     private T dato;
+    private int cant;
 	private Nodo<T> izq;
 	private Nodo<T> der;
         public Nodo(T dato) {
 		this.dato = dato;
 	}
+
+	public int getCant() {
+			return cant;
+		}
+
+		public void setCant(int cant) {
+			this.cant = cant;
+		}
 
 	public Nodo(T dato, Nodo<T> izq, Nodo<T> der) {
 		this.dato = dato;
