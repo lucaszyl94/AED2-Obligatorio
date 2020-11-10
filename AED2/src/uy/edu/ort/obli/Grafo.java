@@ -48,6 +48,14 @@ public class Grafo {
 //		}
     }
 
+    public Movil[] getMoviles() {
+        return moviles;
+    }
+
+    public Delivery[] getDelivery() {
+        return delivery;
+    }
+
     public boolean esLleno() {
 
         return cant == tope;

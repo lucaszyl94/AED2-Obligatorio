@@ -23,13 +23,15 @@ public class Main {
   s.registrarUsuario("da5@.com","da5","123456");
 
  p.ver(s.listarUsuarios().resultado, Retorno.Resultado.OK, s.listarUsuarios().valorString);
- p.ver(s.registrarMovil("aar8114", 4.94065645841246544, 7.94065645841246544).resultado, Retorno.Resultado.OK, "");
- p.ver(s.registrarDelivery("48292601", 4.94065645841246544, 7.94065645841246544).resultado, Retorno.Resultado.OK,"" );
+ p.ver(s.registrarMovil("aar8114", -34.91, -56.17).resultado, Retorno.Resultado.OK, "");
+ p.ver(s.registrarDelivery("48292601", -34.92, -56.18).resultado, Retorno.Resultado.OK,"" );
   p.ver(s.buscarUsuario("da4@.com").resultado, Retorno.Resultado.OK,"" );
-    p.ver(s.registrarEsquina( 4.94065645841246555, 7.94065645841246555).resultado, Retorno.Resultado.OK,"" );
-        p.ver(s.registrarTramo(4.94065645841246555, 7.94065645841246555,4.94065645841246544, 7.94065645841246544,1,10).resultado, Retorno.Resultado.OK,"" );
+    p.ver(s.registrarEsquina( -34.90, -56.16).resultado, Retorno.Resultado.OK,"" );
+        p.ver(s.registrarTramo(-34.91, -56.37,-34.91, -56.27,1,10).resultado, Retorno.Resultado.OK,"" );
         p.ver(s.registrarTramo(4.94065645841246555, 7.94065645841246555,4.94065645841246544, 7.94065645841246544,1,10).resultado, Retorno.Resultado.OK,"" );
 //   Usuario u1=new Usuario("da1@.com","da1","1234");
 //cu.pertenece(u1);
+  p.ver(s.dibujarMapa().resultado, Retorno.Resultado.OK, s.dibujarMapa().valorString);
+ 
     }
 }

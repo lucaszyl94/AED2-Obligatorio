@@ -27,7 +27,7 @@ public interface ISistema {
 
 	 Retorno deliveryMasCercano(Double coordXi, Double coordYi);
 	 
-	 Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf);
+	 Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf ,String mail);
 	 
 	 Retorno caminoMinimoDelivery(Double coordXi, Double coordYi, Double coordXf, Double coordYf);
 	 

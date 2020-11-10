@@ -1,5 +1,7 @@
 package uy.edu.ort.obli;
 
+import java.awt.Desktop;
+import java.net.URL;
 import uy.edu.ort.obli.ABB;
 import uy.edu.ort.obli.Retorno.Resultado;
 
@@ -149,7 +151,7 @@ return ret;
     }
 
     @Override
-    public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
+    public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf, String mail) {
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
 
@@ -160,7 +162,33 @@ return ret;
 
     @Override
     public Retorno dibujarMapa() {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Retorno ret= new Retorno(Resultado.OK);
+        String marcador= "markers=color:blue%7Clabel:1%7C"+"-34.90"+","+"-56.16";
+         ret.valorString="http://maps.googleapis.com/maps/api/staticmap?center=Montevideo,Uruguay&zoom=13&size=1200x600&maptype=roadmap&"; //"markers=color:blue%7Clabel:1%7C"+"coordX"+","+"coordy";
+        for(Delivery d:Mapa.getDelivery()){
+            if(d!=null){
+                
+            ret.valorString+= "markers=color:blue%7Clabel:D%7C"+String.valueOf(d.coordX)+","+String.valueOf(d.coordY)+"&";
+            }
+        }
+        for(Movil m:Mapa.getMoviles()){
+            if(m!=null){
+                
+            ret.valorString+="markers=color:green%7Clabel:M%7C"+String.valueOf(m.coordX)+","+String.valueOf(m.coordY)+"&";
+            }
+        }
+            ret.valorString+="sensor=false&key=AIzaSyC2kHGtzaC3OOyc7Wi1LMBcEwM9btRZLqw";
+    //  String mapa=marcadorGenerico;  //"http://maps.googleapis.com/maps/api/staticmap?center=Montevideo,Uruguay&zoom=13&size=1200x600&maptype=roadmap&markers=color:blue%7Clabel:1%7C-34.90,-56.16&markers=color:red%7Clabel:2%7C-34.91,-56.17&markers=color:green%7Clabel:3%7C-34.905,-56.19&sensor=false&key=AIzaSyC2kHGtzaC3OOyc7Wi1LMBcEwM9btRZLqw" ;
+  
+  
+    //String url = "http://maps.googleapis.com/maps/api/staticmap?key=AIzaSyC2kHGtzaC3OOyc7Wi1LMBcEwM9btRZLqw&size=1200x600&maptype=roadmap&markers=color:blue%7Clabel:1%7C-34.90,-56.16&markers=color:red%7Clabel:2%7C-34.91,-56.17&markers=color:green%7Clabel:3%7C-34.905,-56.19";
+try { 
+	Desktop.getDesktop().browse(new URL(ret.valorString).toURI()); 
+} catch (Exception e) { 
+	e.printStackTrace(); 
+} 
+//return new Retorno(Resultado.OK);
+  return ret;
     }
 
 }
