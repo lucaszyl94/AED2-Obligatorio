@@ -29,6 +29,7 @@ public class Main {
     p.ver(s.registrarEsquina( -34.90, -56.16).resultado, Retorno.Resultado.OK,"" );
         p.ver(s.registrarTramo(-34.91, -56.37,-34.91, -56.27,1,10).resultado, Retorno.Resultado.OK,"" );
         p.ver(s.registrarTramo(4.94065645841246555, 7.94065645841246555,4.94065645841246544, 7.94065645841246544,1,10).resultado, Retorno.Resultado.OK,"" );
+p.ver(s.caminoMinimoMovil(1.0, 1.0, 7.0, 7.0, "CAP1891@gmail.com").resultado, Retorno.Resultado.OK, s.caminoMinimoMovil(1.0, 1.0, 7.0, 7.0, "CAP1891@gmail.com").valorString);
 //   Usuario u1=new Usuario("da1@.com","da1","1234");
 //cu.pertenece(u1);
   p.ver(s.dibujarMapa().resultado, Retorno.Resultado.OK, s.dibujarMapa().valorString);

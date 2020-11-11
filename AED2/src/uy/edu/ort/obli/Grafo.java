@@ -244,7 +244,7 @@ if(existeVertice(origen) && existeVertice(destino) && !existeArista(origen,desti
         }
     }
 
-    public void dijkstra(Punto origen) {
+    public String dijkstra(Punto origen, boolean esDirigido) {
 
         int posO = buscarPos(origen);
 
@@ -278,6 +278,18 @@ if(existeVertice(origen) && existeVertice(destino) && !existeArista(origen,desti
 
             // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
             // hasta ahora descubierta
+            if(esDirigido){
+                
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyD[posMin][j].getmetros();
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+            }else{
             for (int j = 0; j < tope; j++) {
                 if (!vis[j] && matAdyND[posMin][j].isExiste()) {
                     int sumaAcumulada = dist[posMin] + matAdyND[posMin][j].getmetros();
@@ -288,10 +300,12 @@ if(existeVertice(origen) && existeVertice(destino) && !existeArista(origen,desti
                 }
             }
         }
-
+        }
+        
         System.out.println(Arrays.toString(dist));
         System.out.println(Arrays.toString(vertices));
         System.out.println(Arrays.toString(ant));
+        return Arrays.toString(vertices);
     }
 
     public boolean agregarDelivery(Punto dato, Object o) {

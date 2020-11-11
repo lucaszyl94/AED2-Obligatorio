@@ -142,6 +142,7 @@ return ret;
     
     @Override
     public Retorno movilMasCercano(Double coordXi, Double coordYi) {
+        Mapa.dijkstra(new Punto(coordXi,coordYi),true);
         return new Retorno(Resultado.NO_IMPLEMENTADA);
     }
 
