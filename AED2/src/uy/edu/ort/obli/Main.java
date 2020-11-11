@@ -32,6 +32,8 @@ public class Main {
 //   Usuario u1=new Usuario("da1@.com","da1","1234");
 //cu.pertenece(u1);
   p.ver(s.dibujarMapa().resultado, Retorno.Resultado.OK, s.dibujarMapa().valorString);
- 
+ TestsObligatorio t= new TestsObligatorio();
+ t.testInicializarYDestruirSistema();
+ t.testRegistroUsuarioOK();
     }
 }

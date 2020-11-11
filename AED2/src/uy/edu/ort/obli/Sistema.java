@@ -163,7 +163,7 @@ return ret;
     @Override
     public Retorno dibujarMapa() {
         Retorno ret= new Retorno(Resultado.OK);
-        String marcador= "markers=color:blue%7Clabel:1%7C"+"-34.90"+","+"-56.16";
+       // String marcador= "markers=color:blue%7Clabel:1%7C"+"-34.90"+","+"-56.16";
          ret.valorString="http://maps.googleapis.com/maps/api/staticmap?center=Montevideo,Uruguay&zoom=13&size=1200x600&maptype=roadmap&"; //"markers=color:blue%7Clabel:1%7C"+"coordX"+","+"coordy";
         for(Delivery d:Mapa.getDelivery()){
             if(d!=null){
