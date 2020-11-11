@@ -3,7 +3,7 @@ package uy.edu.ort.obli;
 
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
   //  Nodo<Usuario> nodo= new Nodo<Usuario>();
 
 //    nodo.setDato(u1);
@@ -33,6 +33,7 @@ public class Main {
 //cu.pertenece(u1);
   p.ver(s.dibujarMapa().resultado, Retorno.Resultado.OK, s.dibujarMapa().valorString);
  TestsObligatorio t= new TestsObligatorio();
+ t.setUp();
  t.testInicializarYDestruirSistema();
  t.testRegistroUsuarioOK();
     }
