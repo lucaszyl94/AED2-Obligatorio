@@ -25,3 +25,4 @@ java.io.FileNotFoundException: no segments* file found in org.apache.lucene.stor
 	at org.eclipse.m2e.core.ui.internal.views.MavenRepositoryView$5$1.run(MavenRepositoryView.java:375)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
 2020-11-12 01:40:19,478 [Worker-6: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
+2020-11-12 15:03:51,666 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.

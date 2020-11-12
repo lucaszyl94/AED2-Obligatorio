@@ -390,6 +390,45 @@ public class TestsObligatorio {
 		assertEquals(Retorno.Resultado.ERROR_1, retorno.resultado);
 		
 	}
+	
+	@Test
+	public void lucas() {
+		
+		sistema.inicializarSistema(8);
+		sistema.registrarUsuario("CAP1891@gmail.com", "Omar", "HolaSoyOmar1891");
+		sistema.registrarDelivery("0", 0.0, 0.0);
+		sistema.registrarDelivery("0", 1.0, 1.0);
+		sistema.registrarDelivery("0", 2.0, 2.0);
+		sistema.registrarDelivery("0", 3.0, 3.0);
+		sistema.registrarDelivery("0", 4.0, 4.0);
+		sistema.registrarDelivery("0", 5.0, 5.0);
+		sistema.registrarDelivery("0", 6.0, 6.0);
+		sistema.registrarDelivery("0", 7.0, 7.0);
+
+		sistema.registrarTramo(0.0, 0.0, 2.0, 2.0, 2, 2);
+		sistema.registrarTramo(0.0, 0.0, 3.0, 3.0, 2, 2);
+		sistema.registrarTramo(2.0, 2.0, 5.0, 5.0, 4, 4);
+		sistema.registrarTramo(5.0, 5.0, 3.0, 3.0, 9, 9);
+		sistema.registrarTramo(5.0, 5.0, 6.0, 6.0, 3, 3);
+		sistema.registrarTramo(3.0, 3.0, 7.0, 7.0, 8, 8);
+		sistema.registrarTramo(6.0, 6.0, 7.0, 7.0, 7, 7);
+		sistema.registrarTramo(6.0, 6.0, 4.0, 4.0, 2, 2);
+		sistema.registrarTramo(4.0, 4.0, 1.0, 1.0, 4, 4);
+		sistema.registrarTramo(7.0, 7.0, 1.0, 1.0, 1, 1);
+
+		retorno = sistema.deliveryMasCercano(0.0, 0.0);
+		assertEquals(Retorno.Resultado.OK, retorno.resultado);
+		assertEquals(2, retorno.valorEntero);
+
+		retorno = sistema.deliveryMasCercano(4.0, 4.0);
+		assertEquals(Retorno.Resultado.OK, retorno.resultado);
+		assertEquals(2, retorno.valorEntero);
+
+		retorno = sistema.deliveryMasCercano(7.0, 7.0);
+		assertEquals(Retorno.Resultado.OK, retorno.resultado);
+		assertEquals(1, retorno.valorEntero);
+		
+	}
 
 	@Test
 	public void testMovilMasCercanoError2() {
