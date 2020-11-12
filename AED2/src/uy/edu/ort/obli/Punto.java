@@ -1,66 +1,74 @@
 package uy.edu.ort.obli;
+
 public class Punto<T> {
-	protected double coordX;
-	protected double coordY;
-      private int dato;
 
-	public Punto(double coordX, double coordY) {
-		this.coordX = coordX;
-		this.coordY = coordY;
-	}
-public Punto(double coordX, double coordY,int dato) {
-		this.coordX = coordX;
-		this.coordY = coordY;
-                this.dato=dato;
-	}
-	public double getCoordX() {
-		return coordX;
-	}
+    protected double coordX;
+    protected double coordY;
+    private int dato;
 
-	public void setCoordX(double coordX) {
-		this.coordX = coordX;
-	}
+    public Punto(double coordX, double coordY) {
+        this.coordX = coordX;
+        this.coordY = coordY;
+    }
 
-	public double getCoordY() {
-		return coordY;
-	}
+    public Punto(double coordX, double coordY, int dato) {
+        this.coordX = coordX;
+        this.coordY = coordY;
+        this.dato = dato;
+    }
 
-	public void setCoordY(double coordY) {
-		this.coordY = coordY;
-	}
+    public double getCoordX() {
+        return coordX;
+    }
 
-	@Override
-	public String toString() {
-		return "Punto [coordX=" + coordX + ", coordY=" + coordY + "]";
-	}
+    public void setCoordX(double coordX) {
+        this.coordX = coordX;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(coordX);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(coordY);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
+    public double getCoordY() {
+        return coordY;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		//if (getClass() != obj.getClass())
-			//return false;
-		Punto other = (Punto) obj;
-		if (Double.doubleToLongBits(coordX) != Double.doubleToLongBits(other.coordX))
-			return false;
-		if (Double.doubleToLongBits(coordY) != Double.doubleToLongBits(other.coordY))
-			return false;
-		return true;
-	}
+    public void setCoordY(double coordY) {
+        this.coordY = coordY;
+    }
+
+    @Override
+    public String toString() {
+        return "Punto [coordX=" + coordX + ", coordY=" + coordY + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(coordX);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(coordY);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        //if (getClass() != obj.getClass())
+        //return false;
+        Punto other = (Punto) obj;
+        if (Double.doubleToLongBits(coordX) != Double.doubleToLongBits(other.coordX)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(coordY) != Double.doubleToLongBits(other.coordY)) {
+            return false;
+        }
+        return true;
+    }
 
     public int getDato() {
         return dato;
@@ -69,7 +77,5 @@ public Punto(double coordX, double coordY,int dato) {
     public void setDato(int dato) {
         this.dato = dato;
     }
-	
-	
 
 }
