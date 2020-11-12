@@ -46,6 +46,9 @@ public class  Movil extends Punto {
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
+    
+    
+    
     public boolean validarMatricula(){
         if(this.matricula!=null && this.matricula.trim().equals("")){
             return true;

@@ -52,8 +52,8 @@ public Punto(double coordX, double coordY,int dato) {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		//if (getClass() != obj.getClass())
+			//return false;
 		Punto other = (Punto) obj;
 		if (Double.doubleToLongBits(coordX) != Double.doubleToLongBits(other.coordX))
 			return false;

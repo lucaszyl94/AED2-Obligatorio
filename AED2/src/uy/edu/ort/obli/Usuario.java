@@ -109,20 +109,21 @@ private Punto [] direcciones;
 	}
       
 	public boolean agregarDireccion(double coordX, double coordY){
-            Punto p =existeDireccion(new Punto(coordX,coordY));
-            if(p!=null){
-                p.setDato(p.getDato()+1);
-              int pos = buscarPos(p);
-        direcciones[pos] = p;
-        return true;
-            }else{
-                 Punto pp = new Punto( coordX,  coordY, 1);
-              int pos = posHueco(direcciones);
-        direcciones[pos] = pp; 
-        return true;
-            }
-     
+		
+        Punto p =existeDireccion(new Punto(coordX,coordY));
+        if(p!=null){
+	        p.setDato(p.getDato()+1);
+	        int pos = buscarPos(p);
+	        direcciones[pos] = p;
+	        return true;
+        }else{
+            Punto pp = new Punto( coordX,  coordY, 1);
+            int pos = posHueco(direcciones);
+            direcciones[pos] = pp; 
+            return true;
         }
+     
+    }
   
 
     private int posHueco(Object[] o) {

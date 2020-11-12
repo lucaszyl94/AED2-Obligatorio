@@ -17,7 +17,7 @@ public class ABB<T extends Comparable<T>> {
 	}
 	
 	public Nodo<T> buscar(T dato) {
-		int cant = 0;
+		int cant = 1;
 		return buscarRec(dato, cant, raiz);
 	}
 

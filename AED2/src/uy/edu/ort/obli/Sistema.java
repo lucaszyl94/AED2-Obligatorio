@@ -1,34 +1,22 @@
 package uy.edu.ort.obli;
 
 import java.awt.Desktop;
+import java.util.Arrays;
+import java.util.stream.*;
 import java.net.URL;
 import uy.edu.ort.obli.ABB;
 import uy.edu.ort.obli.Retorno.Resultado;
 
 public class Sistema implements ISistema {
-
-    private static Sistema instancia;
     private Grafo Mapa;
     private ABB<Usuario> Usuarios;
-//   private Grafo gMoviles;
-//   private Grafo gDeliverys;
+    
     public Sistema() {
-
     }
-
-    public static Sistema getInstancia() {
-
-        if (instancia == null) {
-            instancia = new Sistema();
-        }
-        return instancia;
-    }
-
+    
     @Override
     public Retorno inicializarSistema(int maxPuntos) {
-        this.Mapa = new Grafo(maxPuntos);//el mapa es un grafo dirigido? seria por tener orientacion de snetido de calles?
-//        this.gDeliverys = new Grafo(maxPuntos,false);
-//        this.gMoviles = new Grafo(maxPuntos,true);
+        this.Mapa = new Grafo(maxPuntos);
         this.Usuarios = new ABB<Usuario>();
         return new Retorno(Resultado.OK);
     }
@@ -73,8 +61,6 @@ public class Sistema implements ISistema {
         for(Usuario u:Usuarios.listarAsc()){
              ret.valorString+= "\n"+u.getMail()+";"+u.getNombre()+"\n";  
         }
-
-        
         return ret;
     }
 
@@ -123,8 +109,7 @@ return ret;
     	Punto ubicacion = new Punto(coordX,coordY);
     	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
     	Delivery d = new Delivery(cedula,coordX,coordY);
-    	if(Mapa.agregarDelivery(ubicacion, d))return new Retorno(Retorno.Resultado.OK);
-    	//ret = new Retorno(Retorno.Resultado.OK);
+    	if(Mapa.agregarDelivery(d)) return new Retorno(Retorno.Resultado.OK);
         return ret;
     }
 
@@ -135,30 +120,58 @@ return ret;
     	Punto ubicacion = new Punto(coordX,coordY);
     	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
     	Movil m = new Movil(matricula,coordX,coordY);
-    	if(Mapa.agregarMovil(ubicacion, m))return new Retorno(Retorno.Resultado.OK);
-    	//ret = new Retorno(Retorno.Resultado.OK);
+    	if(Mapa.agregarMovil(m))return new Retorno(Retorno.Resultado.OK);
         return ret;
     }
     
     @Override
     public Retorno movilMasCercano(Double coordXi, Double coordYi) {
-        Mapa.dijkstra(new Punto(coordXi,coordYi),true);
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+    	Retorno ret = new Retorno(Resultado.OK);
+    	Punto origen = new Punto(coordXi,coordYi);
+    	if(!Mapa.existeVertice(origen)) return new Retorno(Resultado.ERROR_1);
+    	if(Arrays.stream(Mapa.vertices).filter(m -> m.getClass() == Movil.class).filter(x -> ((Movil)x).isDisponible()).toArray() == null) return new Retorno(Resultado.ERROR_2);
+        ret.valorEntero=Mapa.dijkstraMovilMasCercano(origen);
+        return ret;
     }
 
     @Override
     public Retorno deliveryMasCercano(Double coordXi, Double coordYi) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+    	Retorno ret = new Retorno(Resultado.OK);
+    	Punto origen = new Punto(coordXi,coordYi);
+    	if(!Mapa.existeVertice(origen)) return new Retorno(Resultado.ERROR_1);
+    	if(Arrays.stream(Mapa.vertices).filter(m -> m.getClass() == Delivery.class).filter(x -> ((Delivery)x).isDisponible()).toArray() == null) return new Retorno(Resultado.ERROR_2);
+        Delivery d = Mapa.dijkstraDeliveryMasCercano(origen);
+    	ret.valorEntero=d.getDato();
+        ret.valorString=d.getCoordX()+";"+d.getCoordY();
+        return ret;
     }
 
     @Override
     public Retorno caminoMinimoMovil(Double coordXi, Double coordYi, Double coordXf, Double coordYf, String mail) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+        Retorno ret = new Retorno(Resultado.OK);
+        Punto origen = new Punto(coordXi,coordYi);
+        Punto destino = new Punto(coordXf,coordYf);
+        if(!Mapa.existeVertice(origen) || !Mapa.existeVertice(destino)) return new Retorno(Resultado.ERROR_1);
+        if(Arrays.stream(Mapa.vertices).filter(m -> m.getClass() == Movil.class).filter(x -> ((Movil)x).isDisponible()).toArray() == null) return new Retorno(Resultado.ERROR_2);
+      //Arrays.stream(Mapa.vertices).toArray() == null) return ret;
+      		//.filter(x -> x.getClass()==Movil.class) == null) return ret;
+      		//.filter(x->((Movil)x).isDisponible()).toArray() == null) return new Retorno(Resultado.ERROR_2);
+        ret = Mapa.dijkstraCaminoMovil(origen, destino);
+        Usuario u = new Usuario(mail);
+        Nodo<Usuario> us = Usuarios.buscar(u);
+        us.getDato().agregarDireccion(coordXf, coordYf);
+        return ret;
     }
 
     @Override
     public Retorno caminoMinimoDelivery(Double coordXi, Double coordYi, Double coordXf, Double coordYf) {
-        return new Retorno(Resultado.NO_IMPLEMENTADA);
+    	Retorno ret = new Retorno(Resultado.OK);
+        Punto origen = new Punto(coordXi,coordYi);
+        Punto destino = new Punto(coordXf,coordYf);
+        if(!Mapa.existeVertice(origen) || !Mapa.existeVertice(destino)) return new Retorno(Resultado.ERROR_1);
+        if(Arrays.stream(Mapa.vertices).filter(m -> m.getClass() == Delivery.class).filter(x -> ((Delivery)x).isDisponible()).toArray() == null) return new Retorno(Resultado.ERROR_2);
+        ret = Mapa.dijkstraCaminoDelivery(origen, destino);
+        return ret;
     }
 
     @Override
@@ -166,16 +179,16 @@ return ret;
         Retorno ret= new Retorno(Resultado.OK);
        // String marcador= "markers=color:blue%7Clabel:1%7C"+"-34.90"+","+"-56.16";
          ret.valorString="http://maps.googleapis.com/maps/api/staticmap?center=Montevideo,Uruguay&zoom=13&size=1200x600&maptype=roadmap&"; //"markers=color:blue%7Clabel:1%7C"+"coordX"+","+"coordy";
-        for(Delivery d:Mapa.getDelivery()){
+        for(Object d:Arrays.stream(Mapa.vertices).filter(d -> d.getClass() == Delivery.class).toArray()){
             if(d!=null){
                 
-            ret.valorString+= "markers=color:blue%7Clabel:D%7C"+String.valueOf(d.coordX)+","+String.valueOf(d.coordY)+"&";
+            ret.valorString+= "markers=color:blue%7Clabel:D%7C"+String.valueOf(((Delivery)d).coordX)+","+String.valueOf(((Delivery)d).coordY)+"&";
             }
         }
-        for(Movil m:Mapa.getMoviles()){
+        for(Object m:Arrays.stream(Mapa.vertices).filter(m -> m.getClass() == Movil.class).toArray()){
             if(m!=null){
                 
-            ret.valorString+="markers=color:green%7Clabel:M%7C"+String.valueOf(m.coordX)+","+String.valueOf(m.coordY)+"&";
+            ret.valorString+= "markers=color:blue%7Clabel:D%7C"+String.valueOf(((Movil)m).coordX)+","+String.valueOf(((Movil)m).coordY)+"&";
             }
         }
             ret.valorString+="sensor=false&key=AIzaSyC2kHGtzaC3OOyc7Wi1LMBcEwM9btRZLqw";

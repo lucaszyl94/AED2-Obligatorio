@@ -13,7 +13,21 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="C:\Users\lucas\AED2-Obligatorio"/>
+			<item value="C:\Users\lucas\OneDrive\Documents\ORT - Analista Programador\Algoritmos 2\Obligatorio"/>
+			<item value="C:\Users\lucas\OneDrive\Documents\ORT - Analista Programador\Algoritmos 2\Lista"/>
+			<item value="C:\Users\lucas\OneDrive\Documents\ORT - Analista Programador\Algoritmos 2\Practico0"/>
+			<item value="C:\Users\lucas\OneDrive\Documents\ORT - Analista Programador\Algoritmos 2\ArbolBinarioBusqueda2"/>
+			<item value="C:\Users\lucas\OneDrive\Documents\ORT - Analista Programador\Algoritmos 2\ArbolBinarioBusqueda"/>
+			<item value="C:\Users\lucas\OneDrive\Documents\ORT - Analista Programador\Algoritmos 2\AB"/>
+			<item value="C:\Users\lucas\OneDrive\Documents\ORT - Analista Programador\Algoritmos 2\Graph"/>
 			<item value="C:\Users\lucas\aed2pulltest\AED2-Obligatorio"/>
+		</list>
+	</section>
+	<section name="NewWizardAction">
+		<item key="NewWizardSelectionPage.STORE_SELECTED_ID" value="org.eclipse.jdt.ui.wizards.JavaProjectWizard"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.eclipse.jdt.ui.java"/>
 		</list>
 	</section>
 </section>
