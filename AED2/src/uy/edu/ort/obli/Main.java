@@ -1,60 +1,54 @@
-
 package uy.edu.ort.obli;
 
-
 public class Main {
-    public static void main(String[] args) throws Exception{
-    	
-    	/*TestsObligatorio test = new TestsObligatorio(); 
-    	test.setUp();
-    	test.testInicializarYDestruirSistema();
-    	test.testRegistroUsuarioOK();
-    	test.testRegistroUsuarioError1();
-    	test.testRegistroUsuarioError2();
-    	test.testBuscarUsuarioRaiz();
-    	test.testBuscarUsuarioRaizOrden();
-    	test.testBuscarUsuarioHoja();
-    	test.testBuscarUsuarioHojaOrden();
-    	test.testBuscarUsuarioHojaInterior();
-    	test.testBuscarUsuarioHojaInteriorOrden();
-    	test.testListarUsuarios();
-    	test.testRegistrarEsquina_OK();
-    	test.testRegistrarEsquinaError1();
-    	test.testRegistrarEsquinaError2();
-    	test.testRegistrarDelivery_OK();
-    	test.testRegistrarDeliveryError1();
-    	test.testRegistrarDeliveryError2();
-    	test.testRegistrarMovil_OK();
-    	test.testRegistrarMovilError1();
-    	test.testRegistrarMovilError2();
-    	test.testRegistrarTramoOK();
-    	test.testRegistrarTramoError1();
-    	test.testRegistrarTramoError2();
-    	test.testRegistrarTramoError3();
-    	test.testRegistrarTramoError4();
-    	test.testMovilMasCercanoOK1();
-    	test.testMovilMasCercanoError1();
-    	test.testMovilMasCercanoError2();
-    	test.testDeliveryMasCercanoOK1();
-    	test.testDeliveryMasCercanoError1();
-    	test.testDeliveryMasCercanoError2();
-    	test.testCaminoMinimoMovilOK1();
-    	test.testCaminoMinimoMovilError1();
-    	test.testCaminoMinimoDeliveryOK1();
-    	test.testCaminoMinimoDeliveryError1();
-    	
-    	*/
-    	
 
-    	
-  //  Nodo<Usuario> nodo= new Nodo<Usuario>();
+    public static void main(String[] args) throws Exception {
 
+        TestsObligatorio test = new TestsObligatorio();
+        test.setUp();
+        test.testInicializarYDestruirSistema();
+        test.testRegistroUsuarioOK();
+        test.testRegistroUsuarioError1();
+        test.testRegistroUsuarioError2();
+        test.testBuscarUsuarioRaiz();
+        test.testBuscarUsuarioRaizOrden();
+        test.testBuscarUsuarioHoja();
+        test.testBuscarUsuarioHojaOrden();
+        test.testBuscarUsuarioHojaInterior();
+        test.testBuscarUsuarioHojaInteriorOrden();
+        test.testListarUsuarios();
+        test.testRegistrarEsquina_OK();
+        test.testRegistrarEsquinaError1();
+        test.testRegistrarEsquinaError2();
+        test.testRegistrarDelivery_OK();
+        test.testRegistrarDeliveryError1();
+        test.testRegistrarDeliveryError2();
+        test.testRegistrarMovil_OK();
+        test.testRegistrarMovilError1();
+        test.testRegistrarMovilError2();
+        test.testRegistrarTramoOK();
+        test.testRegistrarTramoError1();
+        test.testRegistrarTramoError2();
+        test.testRegistrarTramoError3();
+        test.testRegistrarTramoError4();
+        test.testMovilMasCercanoOK1();
+        test.testMovilMasCercanoError1();
+        test.testMovilMasCercanoError2();
+        test.testDeliveryMasCercanoOK1();
+        test.testDeliveryMasCercanoError1();
+        test.testDeliveryMasCercanoError2();
+        test.testCaminoMinimoMovilOK1();
+        test.testCaminoMinimoMovilError1();
+        test.testCaminoMinimoDeliveryOK1();
+        test.testCaminoMinimoDeliveryError1();
+
+        //  Nodo<Usuario> nodo= new Nodo<Usuario>();
 //    nodo.setDato(u1);
 //   ControladorUsuarios cu=new ControladorUsuarios();
 //    Movil mm= new Movil();
- //   Nodo<Movil> m = new Nodo<Movil>(mm);
-  //  Nodo<Movil>nm=new Nodo<Movil>(mm);
-    /*
+        //   Nodo<Movil> m = new Nodo<Movil>(mm);
+        //  Nodo<Movil>nm=new Nodo<Movil>(mm);
+        /*
     
     Sistema s = Sistema.getInstancia();
       Prueba p = new Prueba();
@@ -88,6 +82,6 @@ public class Main {
  //t.testInicializarYDestruirSistema();
  //t.testRegistroUsuarioOK();
   * 
-  */
+         */
     }
 }

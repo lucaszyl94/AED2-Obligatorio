@@ -11,26 +11,24 @@ import java.util.Objects;
  *
  * @author hp
  */
-public class  Movil extends Punto {
+public class Movil extends Punto {
+
     private String matricula;
     private boolean disponible;
 
     public Movil(double coordX, double coordY) {
         super(coordX, coordY);
     }
-    
+
 //	public Movil(){
 //	    
 //	}
-	
-	public Movil(String matricula,double x,double y){
-		super(x,y);
-	    this.disponible=true;
-	    this.matricula=matricula;
-	}
+    public Movil(String matricula, double x, double y) {
+        super(x, y);
+        this.disponible = true;
+        this.matricula = matricula;
+    }
 
-   
-	   
     public String getMatricula() {
         return matricula;
     }
@@ -46,11 +44,9 @@ public class  Movil extends Punto {
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
-    
-    
-    
-    public boolean validarMatricula(){
-        if(this.matricula!=null && this.matricula.trim().equals("")){
+
+    public boolean validarMatricula() {
+        if (this.matricula != null && this.matricula.trim().equals("")) {
             return true;
         }
         return false;
@@ -92,5 +88,5 @@ public class  Movil extends Punto {
         }
         return true;
     }
-    
+
 }
