@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package uy.edu.ort.obli;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Usuario implements Comparable<Usuario>{
        private int id;
@@ -75,9 +77,17 @@ private Punto [] direcciones;
     public boolean verificarNombre() {
         return this.getNombre() != null && !this.getNombre().trim().equals("");
     }
+    
+    public static final Pattern VALID_EMAIL_ADDRESS_REGEX = 
+    	    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+    	public static boolean validate(String emailStr) {
+    	        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+    	        return matcher.find();
+    	}
 
     public boolean verificarMail() {
-        return this.getMail() != null && !this.getMail().trim().equals("");// && this.getMail().contains("@") &&this.getMail().contains(".com") ;
+        return validate(this.getMail()) && this.getMail() != null && !this.getMail().trim().equals("");// && this.getMail().contains("@") &&this.getMail().contains(".com") ;
     }
 
     public boolean verificarPassword() {

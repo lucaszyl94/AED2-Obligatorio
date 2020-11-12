@@ -1,6 +1,7 @@
 package uy.edu.ort.obli;
 
 import java.awt.Desktop;
+import java.util.*;
 import java.util.Arrays;
 import java.util.stream.*;
 import java.net.URL;
@@ -58,9 +59,12 @@ public class Sistema implements ISistema {
     @Override
     public Retorno listarUsuarios() {
         Retorno ret = new Retorno(Retorno.Resultado.OK);
+        ret.valorString = "";
+
         for(Usuario u:Usuarios.listarAsc()){
-             ret.valorString+= "\n"+u.getMail()+";"+u.getNombre()+"\n";  
+             ret.valorString+= "|" + u.getMail()+";"+u.getNombre();  
         }
+        ret.valorString = ret.valorString.substring(1);
         return ret;
     }
 
@@ -107,7 +111,7 @@ return ret;
     	Retorno ret = new Retorno(Resultado.ERROR_1);
     	if(Mapa.esLleno()) return ret;
     	Punto ubicacion = new Punto(coordX,coordY);
-    	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
+    	if(Mapa.existeVertice(ubicacion)) return new Retorno(Resultado.ERROR_2);
     	Delivery d = new Delivery(cedula,coordX,coordY);
     	if(Mapa.agregarDelivery(d)) return new Retorno(Retorno.Resultado.OK);
         return ret;
@@ -118,7 +122,7 @@ return ret;
     	Retorno ret = new Retorno(Resultado.ERROR_1);
     	if(Mapa.esLleno()) return ret;
     	Punto ubicacion = new Punto(coordX,coordY);
-    	if(Mapa.existeVertice(ubicacion)) new Retorno(Resultado.ERROR_2);
+    	if(Mapa.existeVertice(ubicacion)) return new Retorno(Resultado.ERROR_2);
     	Movil m = new Movil(matricula,coordX,coordY);
     	if(Mapa.agregarMovil(m))return new Retorno(Retorno.Resultado.OK);
         return ret;
