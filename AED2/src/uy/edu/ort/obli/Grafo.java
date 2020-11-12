@@ -123,6 +123,25 @@ public class Grafo {
 
     // Pre: existeVertice(origen) && existeVertice(destino) && !existeArista(origen,
     // destino)
+    /*public boolean agregarArista(Punto origen, Punto destino, int metros, int minutos) {
+        int posOrigen = buscarPos(origen);
+        int posDestino = buscarPos(destino);
+        if (existeVertice(origen) && existeVertice(destino) && !existeArista(origen, destino, true)) {
+            matAdyD[posOrigen][posDestino].setExiste(true);
+            matAdyD[posOrigen][posDestino].setmetros(metros);
+            matAdyD[posOrigen][posDestino].setminutos(minutos);
+
+            matAdyND[posOrigen][posDestino].setExiste(true);
+            matAdyND[posOrigen][posDestino].setmetros(metros);
+            matAdyND[posOrigen][posDestino].setminutos(minutos);
+            matAdyND[posDestino][posOrigen].setExiste(true);
+            matAdyND[posDestino][posOrigen].setmetros(metros);
+            matAdyND[posDestino][posOrigen].setminutos(minutos);
+        }
+        return true;
+    }
+    */
+    
     public boolean agregarArista(Punto origen, Punto destino, int metros, int minutos) {
         int posOrigen = buscarPos(origen);
         int posDestino = buscarPos(destino);
@@ -130,16 +149,15 @@ public class Grafo {
             matAdyD[posOrigen][posDestino].setExiste(true);
             matAdyD[posOrigen][posDestino].setmetros(metros);
             matAdyD[posOrigen][posDestino].setminutos(minutos);
-            return true;
-        } else if (existeVertice(origen) && existeVertice(destino) && !existeArista(origen, destino, false)) {
+            
             matAdyND[posOrigen][posDestino].setExiste(true);
             matAdyND[posOrigen][posDestino].setmetros(metros);
             matAdyND[posOrigen][posDestino].setminutos(minutos);
-
+            
             return true;
         }
-        return false;
-    }
+		return false;
+        }
 
     private int buscarPos(Punto destino) {
         for (int i = 0; i < tope; i++) {
@@ -180,6 +198,9 @@ public class Grafo {
             }
 
             // visito al elemento a ser procesado
+            if (posMin == -1) {
+                break;
+            }
             vis[posMin] = true;
 
             // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
@@ -194,6 +215,7 @@ public class Grafo {
                 }
             }
         }
+        
 
         int posMinMovil = -1, minMovil = Integer.MAX_VALUE;
         for (int i = 0; i < tope; i++) {
@@ -248,7 +270,7 @@ public class Grafo {
             // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
             // hasta ahora descubierta
             for (int j = 0; j < tope; j++) {
-                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                if (!vis[j] && matAdyND[posMin][j].isExiste()) {
                     int sumaAcumulada = dist[posMin] +1 ;
                     if (sumaAcumulada < dist[j]) {
                         dist[j] = sumaAcumulada;
@@ -315,6 +337,75 @@ public class Grafo {
             // hasta ahora descubierta
             for (int j = 0; j < tope; j++) {
                 if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyD[posMin][j].getmetros(); //para Movil dist[posMin] + 1
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+        if (!vis[posD]) {
+            ret = new Retorno(Resultado.ERROR_1);//no es conexo y no llego al destino;
+        } else {
+            /*para ver el camino mas corto*/
+        	int minutosAcumulados = 0;
+            String coordenadas = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
+            while (ant[posD] != -1) {
+                posD = ant[posD];
+                coordenadas = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY() + "|" + coordenadas;
+                minutosAcumulados += dist[posD];
+            }
+            
+            ret = new Retorno(Resultado.OK);
+
+            ret.valorString = coordenadas;
+            ret.valorEntero = minutosAcumulados/2;
+        }
+
+        return ret;
+    }
+    
+    public Retorno dijkstraCaminoMovil2(Punto origen, Punto destino) {
+        Retorno ret = new Retorno(Resultado.ERROR_1);
+
+        int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++);
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los v�rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al v�rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            if (posMin == -1) {
+                break;
+            }
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
                     int sumaAcumulada = dist[posMin] + matAdyD[posMin][j].getmetros(); //para delivery dist[posMin] + 1
                     if (sumaAcumulada < dist[j]) {
                         dist[j] = sumaAcumulada;
@@ -340,7 +431,7 @@ public class Grafo {
             //para devolver metros
             int posMinMovil = -1, minMovil = Integer.MAX_VALUE;
             for (int j = 0; j < tope; j++) {
-                if (vertices[j] instanceof Movil && ((Movil) vertices[j]).isDisponible() == true && dist[j] < dist[posMinMovil]) {
+                if (vertices[j] instanceof Movil && ((Movil) vertices[j]).isDisponible() == true && dist[j] < minMovil) {
                     posMinMovil = j;
                     minMovil = dist[j];
                 }
@@ -407,29 +498,18 @@ public class Grafo {
             ret = new Retorno(Resultado.ERROR_1);//no es conexo y no llego al destino;
         } else {
             /*para ver el camino mas corto*/
-            String coordenadas = vertices[posD].toString();
+        	int minutosAcumulados = 0;
+            String coordenadas = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY();
             while (ant[posD] != -1) {
                 posD = ant[posD];
-                coordenadas = vertices[posD].toString() + "|" + coordenadas;
+                coordenadas = vertices[posD].getCoordX() + ";" + vertices[posD].getCoordY() + "|" + coordenadas;
+                minutosAcumulados += dist[posD];
             }
-
+            
             ret = new Retorno(Resultado.OK);
 
             ret.valorString = coordenadas;
-
-            //para devolver metros
-            int posMinDelivery = -1, minDelivery = Integer.MAX_VALUE;
-            for (int j = 0; j < tope; j++) {
-                if (vertices[j] instanceof Delivery && ((Delivery) vertices[j]).isDisponible() == true && dist[j] < dist[posMinDelivery]) {
-                    posMinDelivery = j;
-                    minDelivery = dist[j];
-                }
-            }
-            if (posMinDelivery == -1) {
-                return new Retorno(Resultado.ERROR_2);
-            } else {
-                ret.valorEntero = posMinDelivery;
-            }
+            ret.valorEntero = minutosAcumulados/2;
         }
 
         return ret;

@@ -210,9 +210,12 @@ public class Sistema implements ISistema {
         //.filter(x -> x.getClass()==Movil.class) == null) return ret;
         //.filter(x->((Movil)x).isDisponible()).toArray() == null) return new Retorno(Resultado.ERROR_2);
         ret = Mapa.dijkstraCaminoMovil(origen, destino);
-        Usuario u = new Usuario(mail);
-        Nodo<Usuario> us = Usuarios.buscar(u);
-        us.getDato().agregarDireccion(coordXf, coordYf);
+        if(ret.resultado == ret.resultado.OK) {
+        	Usuario u = new Usuario(mail);
+        	Nodo<Usuario> us = Usuarios.buscar(u);
+            us.getDato().agregarDireccion(coordXf, coordYf);
+        }
+        
         return ret;
     }
 

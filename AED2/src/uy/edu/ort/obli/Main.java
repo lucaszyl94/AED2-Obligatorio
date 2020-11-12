@@ -4,43 +4,38 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        TestsObligatorio test = new TestsObligatorio();
-        test.setUp();
-        test.testInicializarYDestruirSistema();
-        test.testRegistroUsuarioOK();
-        test.testRegistroUsuarioError1();
-        test.testRegistroUsuarioError2();
-        test.testBuscarUsuarioRaiz();
-        test.testBuscarUsuarioRaizOrden();
-        test.testBuscarUsuarioHoja();
-        test.testBuscarUsuarioHojaOrden();
-        test.testBuscarUsuarioHojaInterior();
-        test.testBuscarUsuarioHojaInteriorOrden();
-        test.testListarUsuarios();
-        test.testRegistrarEsquina_OK();
-        test.testRegistrarEsquinaError1();
-        test.testRegistrarEsquinaError2();
-        test.testRegistrarDelivery_OK();
-        test.testRegistrarDeliveryError1();
-        test.testRegistrarDeliveryError2();
-        test.testRegistrarMovil_OK();
-        test.testRegistrarMovilError1();
-        test.testRegistrarMovilError2();
-        test.testRegistrarTramoOK();
-        test.testRegistrarTramoError1();
-        test.testRegistrarTramoError2();
-        test.testRegistrarTramoError3();
-        test.testRegistrarTramoError4();
-        test.testMovilMasCercanoOK1();
-        test.testMovilMasCercanoError1();
-        test.testMovilMasCercanoError2();
-        test.testDeliveryMasCercanoOK1();
-        test.testDeliveryMasCercanoError1();
-        test.testDeliveryMasCercanoError2();
-        test.testCaminoMinimoMovilOK1();
-        test.testCaminoMinimoMovilError1();
-        test.testCaminoMinimoDeliveryOK1();
-        test.testCaminoMinimoDeliveryError1();
+    	/*Sistema.inicializarSistema(11);
+		sistema.registrarUsuario("CAP1891@gmail.com", "Omar", "HolaSoyOmar1891");
+		sistema.registrarDelivery("1", 1.0, 1.0);
+		sistema.registrarDelivery("4", 4.0, 4.0);
+		sistema.registrarMovil("7", 7.0, 7.0);
+		sistema.registrarDelivery("10", 10.0, 10.0);
+		sistema.registrarMovil("11", 11.0, 11.0);
+		sistema.registrarEsquina(2.0, 2.0);
+		sistema.registrarEsquina(3.0, 3.0);
+		sistema.registrarEsquina(5.0, 5.0);
+		sistema.registrarEsquina(6.0, 6.0);
+		sistema.registrarEsquina(8.0, 8.0);
+		sistema.registrarEsquina(9.0, 9.0);
+
+		sistema.registrarTramo(1.0, 1.0, 2.0, 2.0, 9999, 5);
+		sistema.registrarTramo(1.0, 1.0, 4.0, 4.0, 9999, 3);
+		sistema.registrarTramo(2.0, 2.0, 3.0, 3.0, 9999, 1);
+		sistema.registrarTramo(2.0, 2.0, 5.0, 5.0, 9999, 11);
+		sistema.registrarTramo(3.0, 3.0, 6.0, 6.0, 9999, 2);
+		sistema.registrarTramo(3.0, 3.0, 11.0, 11.0, 9999, 19);
+		sistema.registrarTramo(4.0, 4.0, 5.0, 5.0, 9999, 14);
+		sistema.registrarTramo(5.0, 5.0, 6.0, 6.0, 9999, 6);
+		sistema.registrarTramo(6.0, 6.0, 5.0, 5.0, 6, 6); //doble
+		sistema.registrarTramo(5.0, 5.0, 8.0, 8.0, 9999, 1);
+		sistema.registrarTramo(6.0, 6.0, 9.0, 9.0, 9999, 3);
+		sistema.registrarTramo(7.0, 7.0, 8.0, 8.0, 9999, 8);
+		sistema.registrarTramo(8.0, 8.0, 7.0, 7.0, 9999, 8); //doble
+		sistema.registrarTramo(8.0, 8.0, 9.0, 9.0, 9999, 5); 
+		sistema.registrarTramo(9.0, 9.0, 8.0, 8.0, 9999, 5); //doble
+		sistema.registrarTramo(9.0, 9.0, 10.0, 10.0, 9999, 4);
+
+		retorno = sistema.caminoMinimoDelivery(1.0, 1.0, 10.0, 10.0);
 
         //  Nodo<Usuario> nodo= new Nodo<Usuario>();
 //    nodo.setDato(u1);

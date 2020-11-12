@@ -1238,3 +1238,1196 @@ java.lang.IllegalStateException
 	at org.eclipse.debug.internal.ui.model.elements.ElementContentProvider.retrieveChildCount(ElementContentProvider.java:126)
 	at org.eclipse.debug.internal.ui.model.elements.ElementContentProvider$2.run(ElementContentProvider.java:76)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2020-11-12 16:35:31.065 -----------------------------------------------
+eclipse.buildId=4.17.0.I20200902-1800
+java.version=14.0.2
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.jface 2 0 2020-11-12 16:38:18.042
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2020-11-12 16:38:18.042
+!MESSAGE A conflict occurred for CTRL+SHIFT+T:
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.navigate.open.type,Open Type,
+		Open a type in a Java editor,
+		Category(org.eclipse.ui.category.navigate,Navigate,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@4f6ff62,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(CTRL+SHIFT+T,
+	ParameterizedCommand(Command(org.eclipse.lsp4e.symbolinworkspace,Go to Symbol in Workspace,
+		,
+		Category(org.eclipse.lsp4e.category,Language Servers,null,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@1c62d2ad,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+
+!ENTRY org.eclipse.egit.ui 2 0 2020-11-12 16:38:28.582
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\lucas'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-12 17:11:12.014
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package uy.edu.ort.obli;
+
+import java.util.Arrays;
+
+import uy.edu.ort.cola.ColaDinamica;
+import uy.edu.ort.cola.ICola;
+import uy.edu.ort.obli.Retorno.Resultado;
+
+public class Grafo {
+
+    private int tope;
+    private int cant;
+    public Punto[] vertices;
+    //private Movil[] moviles;
+    //private Delivery[] deliverys;
+    private Arista[][] matAdyD;
+    private Arista[][] matAdyND;
+
+    public Grafo(int tope) {// boolean esDirigido) {
+        this.tope = tope;
+        this.vertices = new Punto[tope];
+        this.matAdyD = new Arista[tope][tope];
+        this.matAdyND = new Arista[tope][tope];
+        //this.deliverys = new Delivery[tope];
+        //this.moviles = new Movil[tope];
+        for (int i = 0; i < matAdyD.length; i++) {
+            for (int j = 0; j < matAdyD.length; j++) {
+                matAdyD[i][j] = new Arista();
+            }
+        }
+
+        for (int i = 0; i < matAdyND.length; i++) {
+            for (int j = i; j < matAdyND.length; j++) {
+                matAdyND[i][j] = matAdyND[j][i] = new Arista();
+            }
+        }
+    }
+
+    public boolean esLleno() {
+
+        return cant == tope;
+    }
+
+    public boolean esVacio() {
+        return cant == 0;
+    }
+
+    public Punto[] getVertices() {
+        return vertices;
+    }
+
+    // Pre: !esLleno()
+    public boolean agregarVertice(Punto<Object> dato, Object o) {
+        //dato.setDato(o);
+        if (!esLleno()) {
+            int pos = posHueco(vertices);
+            vertices[pos] = dato;
+            cant++;
+            return true;
+        }
+        return false;
+    }
+
+    private int posHueco(Object[] o) {
+        int pos = 0;
+        while (o[pos] != null) {
+            pos++;
+        }
+        return pos;
+    }
+
+    private int posConVertice() {
+        int pos = 0;
+        while (vertices[pos] == null) {
+            pos++;
+        }
+        return pos;
+    }
+
+    public boolean existeVertice(Punto origen) {
+        return buscarPos(origen) != -1;
+    }
+
+    // Pre: existeVertice(origen) && existeVertice(destino)
+    public boolean existeArista(Punto origen, Punto destino, boolean esDirigido) {
+        int posOrigen = buscarPos(origen);
+        int posDestino = buscarPos(destino);
+        if (existeVertice(origen) && existeVertice(destino)) {
+            if (esDirigido) {
+                return matAdyD[posOrigen][posDestino].isExiste();
+            } else {
+                return matAdyND[posOrigen][posDestino].isExiste();
+            }
+
+        }
+        return false;
+    }
+
+    // Pre: existeVertice(origen) && existeVertice(destino)
+    public void borrarArista(Punto origen, Punto destino) {
+        int posOrigen = buscarPos(origen);
+        int posDestino = buscarPos(destino);
+
+        matAdyD[posOrigen][posDestino].setExiste(false);
+        matAdyND[posOrigen][posDestino].setExiste(false);
+    }
+
+    // Pre: existeVertice(origen)
+    public void borrarVertice(Punto origen) {
+        int posOrigen = buscarPos(origen);
+        cant--;
+        vertices[posOrigen] = null;
+        if (existeVertice(origen)) {
+            for (int i = 0; i < tope; i++) {
+                matAdyD[i][posOrigen].setExiste(false);
+                matAdyD[posOrigen][i].setExiste(false);
+                matAdyND[i][posOrigen].setExiste(false);
+                matAdyND[posOrigen][i].setExiste(false);
+            }
+        }
+
+    }
+
+    // Pre: existeVertice(origen) && existeVertice(destino) && !existeArista(origen,
+    // destino)
+    public boolean agregarArista(Punto origen, Punto destino, int metros, int minutos) {
+        int posOrigen = buscarPos(origen);
+        int posDestino = buscarPos(destino);
+        if (existeVertice(origen) && existeVertice(destino) && !existeArista(origen, destino, true)) {
+            matAdyD[posOrigen][posDestino].setExiste(true);
+            matAdyD[posOrigen][posDestino].setmetros(metros);
+            matAdyD[posOrigen][posDestino].setminutos(minutos);
+        (existeVertice(origen) && existeVertice(destino) && !existeArista(origen, destino, false)) {
+            matAdyND[posOrigen][posDestino].setExiste(true);
+            matAdyND[posOrigen][posDestino].setmetros(metros);
+            matAdyND[posOrigen][posDestino].setminutos(minutos);
+
+            return true;
+        }
+        return false;
+    }
+
+    private int buscarPos(Punto destino) {
+        for (int i = 0; i < tope; i++) {
+            if (destino.equals(vertices[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public Movil dijkstraMovilMasCercano(Punto origen) {
+
+        int posO = buscarPos(origen);
+//int mini =0;
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++){};
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                  //  mini=dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] +matAdyD[posMin][j].getmetros() ;
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+
+        int posMinMovil = -1, minMovil = Integer.MAX_VALUE;
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i] instanceof Movil && ((Movil) vertices[i]).isDisponible() == true && dist[i] < minMovil) {
+                posMinMovil = i;
+                minMovil = dist[i];
+            }
+        }
+        if (posMinMovil == -1) {
+            return null;
+        } else {
+            Movil m = (Movil) vertices[posMinMovil];
+            m.setDato(minMovil);
+            m.setDisponible(false);
+            return m;
+        }
+    }
+
+    public Delivery dijkstraDeliveryMasCercano(Punto origen) {
+
+       
+        int posO = buscarPos(origen);
+//int mini =0;
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++){};
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                  //  mini=dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] +1 ;
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+
+        int posMinDelivery = -1, minDelivery = Integer.MAX_VALUE;
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i] instanceof Delivery && ((Delivery) vertices[i]).isDisponible() == true && dist[i] < minDelivery) {
+                posMinDelivery = i;
+                minDelivery = dist[i];
+            }
+        }
+        if (posMinDelivery == -1) {
+            return null;
+        } else {
+            Delivery d = (Delivery) vertices[posMinDelivery];
+            d.setDato(minDelivery);
+            d.setDisponible(false);
+            return d;
+        }
+    }
+
+    public Retorno dijkstraCaminoMovil(Punto origen, Punto destino) {
+        Retorno ret = new Retorno(Resultado.ERROR_1);
+
+        int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++);
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            if (posMin == -1) {
+                break;
+            }
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyD[posMin][j].getmetros(); //para delivery dist[posMin] + 1
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+        if (!vis[posD]) {
+            ret = new Retorno(Resultado.ERROR_1);//no es conexo y no llego al destino;
+        } else {
+            /*para ver el camino mas corto*/
+            String coordenadas = vertices[posD].toString();
+            while (ant[posD] != -1) {
+                posD = ant[posD];
+                coordenadas = vertices[posD].toString() + "|" + coordenadas;
+            }
+
+            ret = new Retorno(Resultado.OK);
+
+            ret.valorString = coordenadas;
+
+            //para devolver metros
+            int posMinMovil = -1, minMovil = Integer.MAX_VALUE;
+            for (int j = 0; j < tope; j++) {
+                if (vertices[j] instanceof Movil && ((Movil) vertices[j]).isDisponible() == true && dist[j] < dist[posMinMovil]) {
+                    posMinMovil = j;
+                    minMovil = dist[j];
+                }
+            }
+            if (posMinMovil == -1) {
+                return new Retorno(Resultado.ERROR_2);
+            } else {
+                ret.valorEntero = posMinMovil;
+            }
+        }
+
+        return ret;
+    }
+
+    public Retorno dijkstraCaminoDelivery(Punto origen, Punto destino) {
+        Retorno ret = new Retorno(Resultado.ERROR_1);
+
+        int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++);
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            if (posMin == -1) {
+                break;
+            }
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyND[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyND[posMin][j].getminutos(); //para delivery dist[posMin] + 1
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+        if (!vis[posD]) {
+            ret = new Retorno(Resultado.ERROR_1);//no es conexo y no llego al destino;
+        } else {
+            /*para ver el camino mas corto*/
+            String coordenadas = vertices[posD].toString();
+            while (ant[posD] != -1) {
+                posD = ant[posD];
+                coordenadas = vertices[posD].toString() + "|" + coordenadas;
+            }
+
+            ret = new Retorno(Resultado.OK);
+
+            ret.valorString = coordenadas;
+
+            //para devolver metros
+            int posMinDelivery = -1, minDelivery = Integer.MAX_VALUE;
+            for (int j = 0; j < tope; j++) {
+                if (vertices[j] instanceof Delivery && ((Delivery) vertices[j]).isDisponible() == true && dist[j] < dist[posMinDelivery]) {
+                    posMinDelivery = j;
+                    minDelivery = dist[j];
+                }
+            }
+            if (posMinDelivery == -1) {
+                return new Retorno(Resultado.ERROR_2);
+            } else {
+                ret.valorEntero = posMinDelivery;
+            }
+        }
+
+        return ret;
+    }
+
+    public boolean agregarDelivery(Delivery d) {
+        if (!existeVertice(new Punto(d.coordX, d.coordY))) {
+            int posH = posHueco(vertices);
+            vertices[posH] = d;
+            cant++;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean agregarMovil(Movil m) {
+        if (!existeVertice(new Punto(m.coordX, m.coordY))) {
+            int posH = posHueco(vertices);
+            vertices[posH] = m;
+            cant++;
+            return true;
+        }
+        return false;
+    }
+
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:449)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1141)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1318)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 2 2020-11-12 17:11:12.025
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.ui".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:449)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1141)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1318)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 0 2020-11-12 17:11:12.057
+!MESSAGE Error in JDT Core during reconcile
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:449)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:200)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1141)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1318)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:94)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.core 4 4 2020-11-12 17:11:12.103
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package uy.edu.ort.obli;
+
+import java.util.Arrays;
+
+import uy.edu.ort.cola.ColaDinamica;
+import uy.edu.ort.cola.ICola;
+import uy.edu.ort.obli.Retorno.Resultado;
+
+public class Grafo {
+
+    private int tope;
+    private int cant;
+    public Punto[] vertices;
+    //private Movil[] moviles;
+    //private Delivery[] deliverys;
+    private Arista[][] matAdyD;
+    private Arista[][] matAdyND;
+
+    public Grafo(int tope) {// boolean esDirigido) {
+        this.tope = tope;
+        this.vertices = new Punto[tope];
+        this.matAdyD = new Arista[tope][tope];
+        this.matAdyND = new Arista[tope][tope];
+        //this.deliverys = new Delivery[tope];
+        //this.moviles = new Movil[tope];
+        for (int i = 0; i < matAdyD.length; i++) {
+            for (int j = 0; j < matAdyD.length; j++) {
+                matAdyD[i][j] = new Arista();
+            }
+        }
+
+        for (int i = 0; i < matAdyND.length; i++) {
+            for (int j = i; j < matAdyND.length; j++) {
+                matAdyND[i][j] = matAdyND[j][i] = new Arista();
+            }
+        }
+    }
+
+    public boolean esLleno() {
+
+        return cant == tope;
+    }
+
+    public boolean esVacio() {
+        return cant == 0;
+    }
+
+    public Punto[] getVertices() {
+        return vertices;
+    }
+
+    // Pre: !esLleno()
+    public boolean agregarVertice(Punto<Object> dato, Object o) {
+        //dato.setDato(o);
+        if (!esLleno()) {
+            int pos = posHueco(vertices);
+            vertices[pos] = dato;
+            cant++;
+            return true;
+        }
+        return false;
+    }
+
+    private int posHueco(Object[] o) {
+        int pos = 0;
+        while (o[pos] != null) {
+            pos++;
+        }
+        return pos;
+    }
+
+    private int posConVertice() {
+        int pos = 0;
+        while (vertices[pos] == null) {
+            pos++;
+        }
+        return pos;
+    }
+
+    public boolean existeVertice(Punto origen) {
+        return buscarPos(origen) != -1;
+    }
+
+    // Pre: existeVertice(origen) && existeVertice(destino)
+    public boolean existeArista(Punto origen, Punto destino, boolean esDirigido) {
+        int posOrigen = buscarPos(origen);
+        int posDestino = buscarPos(destino);
+        if (existeVertice(origen) && existeVertice(destino)) {
+            if (esDirigido) {
+                return matAdyD[posOrigen][posDestino].isExiste();
+            } else {
+                return matAdyND[posOrigen][posDestino].isExiste();
+            }
+
+        }
+        return false;
+    }
+
+    // Pre: existeVertice(origen) && existeVertice(destino)
+    public void borrarArista(Punto origen, Punto destino) {
+        int posOrigen = buscarPos(origen);
+        int posDestino = buscarPos(destino);
+
+        matAdyD[posOrigen][posDestino].setExiste(false);
+        matAdyND[posOrigen][posDestino].setExiste(false);
+    }
+
+    // Pre: existeVertice(origen)
+    public void borrarVertice(Punto origen) {
+        int posOrigen = buscarPos(origen);
+        cant--;
+        vertices[posOrigen] = null;
+        if (existeVertice(origen)) {
+            for (int i = 0; i < tope; i++) {
+                matAdyD[i][posOrigen].setExiste(false);
+                matAdyD[posOrigen][i].setExiste(false);
+                matAdyND[i][posOrigen].setExiste(false);
+                matAdyND[posOrigen][i].setExiste(false);
+            }
+        }
+
+    }
+
+    // Pre: existeVertice(origen) && existeVertice(destino) && !existeArista(origen,
+    // destino)
+    public boolean agregarArista(Punto origen, Punto destino, int metros, int minutos) {
+        int posOrigen = buscarPos(origen);
+        int posDestino = buscarPos(destino);
+        if (existeVertice(origen) && existeVertice(destino) && !existeArista(origen, destino, true)) {
+            matAdyD[posOrigen][posDestino].setExiste(true);
+            matAdyD[posOrigen][posDestino].setmetros(metros);
+            matAdyD[posOrigen][posDestino].setminutos(minutos);
+        (existeVertice(origen) && existeVertice(destino) && !existeArista(origen, destino, false)) {
+            matAdyND[posOrigen][posDestino].setExiste(true);
+            matAdyND[posOrigen][posDestino].setmetros(metros);
+            matAdyND[posOrigen][posDestino].setminutos(minutos);
+
+            return true;
+        }
+        return false;
+    }
+
+    private int buscarPos(Punto destino) {
+        for (int i = 0; i < tope; i++) {
+            if (destino.equals(vertices[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public Movil dijkstraMovilMasCercano(Punto origen) {
+
+        int posO = buscarPos(origen);
+//int mini =0;
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++){};
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                  //  mini=dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] +matAdyD[posMin][j].getmetros() ;
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+
+        int posMinMovil = -1, minMovil = Integer.MAX_VALUE;
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i] instanceof Movil && ((Movil) vertices[i]).isDisponible() == true && dist[i] < minMovil) {
+                posMinMovil = i;
+                minMovil = dist[i];
+            }
+        }
+        if (posMinMovil == -1) {
+            return null;
+        } else {
+            Movil m = (Movil) vertices[posMinMovil];
+            m.setDato(minMovil);
+            m.setDisponible(false);
+            return m;
+        }
+    }
+
+    public Delivery dijkstraDeliveryMasCercano(Punto origen) {
+
+       
+        int posO = buscarPos(origen);
+//int mini =0;
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++){};
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                  //  mini=dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] +1 ;
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+
+        int posMinDelivery = -1, minDelivery = Integer.MAX_VALUE;
+        for (int i = 0; i < tope; i++) {
+            if (vertices[i] instanceof Delivery && ((Delivery) vertices[i]).isDisponible() == true && dist[i] < minDelivery) {
+                posMinDelivery = i;
+                minDelivery = dist[i];
+            }
+        }
+        if (posMinDelivery == -1) {
+            return null;
+        } else {
+            Delivery d = (Delivery) vertices[posMinDelivery];
+            d.setDato(minDelivery);
+            d.setDisponible(false);
+            return d;
+        }
+    }
+
+    public Retorno dijkstraCaminoMovil(Punto origen, Punto destino) {
+        Retorno ret = new Retorno(Resultado.ERROR_1);
+
+        int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++);
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            if (posMin == -1) {
+                break;
+            }
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyD[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyD[posMin][j].getmetros(); //para delivery dist[posMin] + 1
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+        if (!vis[posD]) {
+            ret = new Retorno(Resultado.ERROR_1);//no es conexo y no llego al destino;
+        } else {
+            /*para ver el camino mas corto*/
+            String coordenadas = vertices[posD].toString();
+            while (ant[posD] != -1) {
+                posD = ant[posD];
+                coordenadas = vertices[posD].toString() + "|" + coordenadas;
+            }
+
+            ret = new Retorno(Resultado.OK);
+
+            ret.valorString = coordenadas;
+
+            //para devolver metros
+            int posMinMovil = -1, minMovil = Integer.MAX_VALUE;
+            for (int j = 0; j < tope; j++) {
+                if (vertices[j] instanceof Movil && ((Movil) vertices[j]).isDisponible() == true && dist[j] < dist[posMinMovil]) {
+                    posMinMovil = j;
+                    minMovil = dist[j];
+                }
+            }
+            if (posMinMovil == -1) {
+                return new Retorno(Resultado.ERROR_2);
+            } else {
+                ret.valorEntero = posMinMovil;
+            }
+        }
+
+        return ret;
+    }
+
+    public Retorno dijkstraCaminoDelivery(Punto origen, Punto destino) {
+        Retorno ret = new Retorno(Resultado.ERROR_1);
+
+        int posO = buscarPos(origen);
+        int posD = buscarPos(destino);
+
+        // Armo los tres arreglos necesarios para realizar el algoritmo
+        int[] dist = new int[tope];
+        int[] ant = new int[tope];
+        boolean[] vis = new boolean[tope];
+
+        // inicializo los vectores
+        for (int i = 0; i < tope; dist[i] = Integer.MAX_VALUE, ant[i] = -1, i++);
+
+        // asigno al destino como el primer nodo a ser recorrido
+        dist[posO] = 0;
+
+        // comienzo proceso reiterativo (V veces) para ir procesando a los vï¿½rtices de a
+        // uno
+        for (int k = 0; k < cant; k++) {
+            int posMin = -1, min = Integer.MAX_VALUE;
+
+            // hallo al vï¿½rtice no visitado de menor distancia al origen
+            for (int i = 0; i < tope; i++) {
+                if (!vis[i] && dist[i] < min) {
+                    posMin = i;
+                    min = dist[i];
+                }
+            }
+
+            // visito al elemento a ser procesado
+            if (posMin == -1) {
+                break;
+            }
+            vis[posMin] = true;
+
+            // analizo a los adyacentes, actualizando su distancia en caso de ser menor a la
+            // hasta ahora descubierta
+            for (int j = 0; j < tope; j++) {
+                if (!vis[j] && matAdyND[posMin][j].isExiste()) {
+                    int sumaAcumulada = dist[posMin] + matAdyND[posMin][j].getminutos(); //para delivery dist[posMin] + 1
+                    if (sumaAcumulada < dist[j]) {
+                        dist[j] = sumaAcumulada;
+                        ant[j] = posMin;
+                    }
+                }
+            }
+        }
+        if (!vis[posD]) {
+            ret = new Retorno(Resultado.ERROR_1);//no es conexo y no llego al destino;
+        } else {
+            /*para ver el camino mas corto*/
+            String coordenadas = vertices[posD].toString();
+            while (ant[posD] != -1) {
+                posD = ant[posD];
+                coordenadas = vertices[posD].toString() + "|" + coordenadas;
+            }
+
+            ret = new Retorno(Resultado.OK);
+
+            ret.valorString = coordenadas;
+
+            //para devolver metros
+            int posMinDelivery = -1, minDelivery = Integer.MAX_VALUE;
+            for (int j = 0; j < tope; j++) {
+                if (vertices[j] instanceof Delivery && ((Delivery) vertices[j]).isDisponible() == true && dist[j] < dist[posMinDelivery]) {
+                    posMinDelivery = j;
+                    minDelivery = dist[j];
+                }
+            }
+            if (posMinDelivery == -1) {
+                return new Retorno(Resultado.ERROR_2);
+            } else {
+                ret.valorEntero = posMinDelivery;
+            }
+        }
+
+        return ret;
+    }
+
+    public boolean agregarDelivery(Delivery d) {
+        if (!existeVertice(new Punto(d.coordX, d.coordY))) {
+            int posH = posHueco(vertices);
+            vertices[posH] = d;
+            cant++;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean agregarMovil(Movil m) {
+        if (!existeVertice(new Punto(m.coordX, m.coordY))) {
+            int posH = posHueco(vertices);
+            vertices[posH] = m;
+            cant++;
+            return true;
+        }
+        return false;
+    }
+
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:272)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:264)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:197)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:187)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:167)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$1.run(SelectionListenerWithASTManager.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 2 2020-11-12 17:11:12.134
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.core.manipulation".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:272)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:264)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:197)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:187)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:167)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$1.run(SelectionListenerWithASTManager.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.jdt.core.manipulation 4 0 2020-11-12 17:11:12.145
+!MESSAGE Error in JDT Core during AST creation
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.InfixExpression.setOperator(InfixExpression.java:383)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:880)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2011)
+	at org.eclipse.jdt.core.dom.ASTConverter.convertToParenthesizedExpression(ASTConverter.java:3750)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1932)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1963)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3023)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1372)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2944)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2203)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:2968)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:751)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:208)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3302)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1513)
+	at org.eclipse.jdt.core.dom.CompilationUnitResolver.convert(CompilationUnitResolver.java:323)
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1231)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider$1.run(CoreASTProvider.java:272)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.createAST(CoreASTProvider.java:264)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:197)
+	at org.eclipse.jdt.core.manipulation.CoreASTProvider.getAST(CoreASTProvider.java:187)
+	at org.eclipse.jdt.core.manipulation.SharedASTProviderCore.getAST(SharedASTProviderCore.java:138)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup.calculateASTandInform(SelectionListenerWithASTManager.java:167)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionListenerWithASTManager$PartListenerGroup$1.run(SelectionListenerWithASTManager.java:152)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.core.jobs 4 2 2020-11-12 17:21:10.617
+!MESSAGE An internal error occurred during: "Debug child count update".
+!STACK 0
+java.lang.IllegalStateException
+	at org.eclipse.jdt.core.dom.ASTParser.internalCreateAST(ASTParser.java:1138)
+	at org.eclipse.jdt.core.dom.ASTParser.createAST(ASTParser.java:820)
+	at org.eclipse.jdt.internal.debug.core.model.JDIStackFrame.tryToResolveLambdaVariableNames(JDIStackFrame.java:419)
+	at org.eclipse.jdt.internal.debug.core.model.JDIStackFrame.getVariables0(JDIStackFrame.java:382)
+	at org.eclipse.jdt.internal.debug.core.model.JDIStackFrame.getVariables(JDIStackFrame.java:307)
+	at org.eclipse.debug.internal.ui.model.elements.StackFrameContentProvider.getAllChildren(StackFrameContentProvider.java:50)
+	at org.eclipse.jdt.internal.debug.ui.variables.JavaStackFrameContentProvider.getAllChildren(JavaStackFrameContentProvider.java:36)
+	at org.eclipse.debug.internal.ui.model.elements.StackFrameContentProvider.getChildCount(StackFrameContentProvider.java:29)
+	at org.eclipse.debug.internal.ui.model.elements.ElementContentProvider.retrieveChildCount(ElementContentProvider.java:126)
+	at org.eclipse.debug.internal.ui.model.elements.ElementContentProvider$2.run(ElementContentProvider.java:76)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
